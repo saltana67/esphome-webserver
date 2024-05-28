@@ -37,3 +37,8 @@ serve
 =====
 `npm run server`
 Starts a production test server on http://localhost:5001
+
+
+[URL-encoder for SVG](https://yoksel.github.io/url-encoder/)
+https://vitejs.dev/ https://rollupjs.org/
+[free icons](https://iconmonstr.com/)

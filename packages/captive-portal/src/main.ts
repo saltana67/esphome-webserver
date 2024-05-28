@@ -15,22 +15,59 @@ function lock(show: boolean) {
 function html(h: String[]) {
   return h.join("");
 }
-fetch("/config.json").then(function (response) {
-  response.json().then(function (config) {
-    document.title = config.name;
-    document.body.getElementsByTagName("h1")[0].innerText = "MAC Address: " + config.mac
-    document.body.getElementsByTagName("h1")[1].innerText = "WiFi Networks: " + config.name
-    let result = config.aps.slice(1).map(function (ap) {
-      return `<div class="network" 
-      onclick="document.getElementById('ssid').value = this.innerText;document.getElementById('psk').focus()">
-      <a href="#" class="network-left">
-        ${wifi(ap.rssi)}
-        <span class="network-ssid">${ap.ssid}</span>
-      </a>
-      ${lock(ap.lock)}
-      </div>`
-    })
-    document.querySelector("#net").innerHTML = html(result)
-    document.querySelector("link[rel~='icon']").href = `data:image/svg+xml,${wifi(-65)}`;
-  })
-})
+
+let scanRunning : boolean = false;
+
+function scan() {
+
+  const refreshButton     = document.querySelector("#refreshButton");
+  const refreshButtonText = document.querySelector("#refreshButtonText");
+  const refreshButtonIcon = document.querySelector("#refreshButtonIcon");
+
+  //alert("scanRunning: " + scanRunning);
+
+  if( scanRunning ) {
+    //stop scanning 
+    scanRunning = false;
+    refreshButton.classList.remove("scanning");
+    refreshButtonIcon.classList.remove("scanning");
+    refreshButtonText.innerHTML="refresh";
+    return;
+  }else{
+    //start scanning 
+    scanRunning = true;
+    refreshButton.classList.add("scanning");
+    refreshButtonIcon.classList.add("scanning");
+    refreshButtonText.innerHTML="scanning"
+    scanRunning = true;
+
+    fetch("/config.json").then(function (response) {
+      //window.alert("config.json fetched");
+      response.json().then(function (config) {
+        document.title = config.name;
+        document.body.getElementsByTagName("h1")[0].innerText = "WiFi Networks: " + config.name
+        let result = config.aps.slice(1).map(function (ap) {
+          return `<div class="network" 
+          onclick="document.getElementById('ssid').value = this.innerText;document.getElementById('psk').focus()">
+          <a href="#" class="network-left">
+            ${wifi(ap.rssi)}
+            <span class="network-ssid">${ap.ssid}</span>
+          </a>
+          ${lock(ap.lock)}
+          </div>`
+        })
+        if( scanRunning ){ 
+          document.querySelector("#net").innerHTML = html(result)
+          document.querySelector("link[rel~='icon']").href = `data:image/svg+xml,${wifi(-65)}`;
+          scanRunning = false;
+          refreshButton.classList.remove("scanning");
+          refreshButtonIcon.classList.remove("scanning");
+          refreshButtonText.innerHTML="refresh";              }
+      })
+    });
+  }
+}
+
+document.querySelector("#refreshButton").addEventListener("click", scan);
+
+scan();
