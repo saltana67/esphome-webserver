@@ -4,7 +4,6 @@ on:
   push:
     paths:
       - 'packages/captive-portal/package.json'
-      - 'packages/captive-portal/pnpm-lock.yaml'
       - 'packages/captive-portal/Dockerfile.dev-full'
   workflow_dispatch:  # manual trigger
 
