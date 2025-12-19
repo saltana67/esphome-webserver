@@ -1,0 +1,44 @@
+name: Build Dev Image
+
+on:
+  push:
+    paths:
+      - 'packages/captive-portal/package.json'
+      - 'packages/captive-portal/pnpm-lock.yaml'
+      - 'packages/captive-portal/Dockerfile.dev-full'
+  workflow_dispatch:  # manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}/captive-portal-dev
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=
+            
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: packages/captive-portal
+          file: packages/captive-portal/Dockerfile.dev-full
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

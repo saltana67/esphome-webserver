@@ -1,33 +1,45 @@
 import { defineConfig } from "vite";
-import gzipPlugin from "rollup-plugin-gzip";
 import { viteSingleFile } from "vite-plugin-singlefile";
-
-import minifyHTML from "rollup-plugin-minify-html-template-literals";
-import { minifyHtml as ViteMinifyHtml } from "vite-plugin-html";
+import { createHtmlPlugin } from "vite-plugin-html";
+import gzipPlugin from "rollup-plugin-gzip";
 
 export default defineConfig({
   clearScreen: false,
   plugins: [
     viteSingleFile(),
-    { ...minifyHTML(), enforce: "pre", apply: "build" },
-    ViteMinifyHtml(),
+    createHtmlPlugin({
+      minify: {
+        collapseWhitespace: true,
+        removeComments: true,
+        removeAttributeQuotes: true,
+        removeRedundantAttributes: true,
+        removeScriptTypeAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        removeEmptyAttributes: true,
+        collapseBooleanAttributes: true,
+        sortAttributes: true,
+        sortClassName: true,
+        minifyCSS: true,
+        minifyJS: true,
+      },
+    }),
     {
       ...gzipPlugin({ filter: /\.(html)$/ }),
       enforce: "post",
       apply: "build",
     },
   ],
-  css: {
-    postcss: {},
-  },
   build: {
-    brotliSize: false,
-    cssCodeSplit: false,
-    outDir: "../../_static/captive_portal",
+    minify: "terser",
+    terserOptions: {
+      compress: { passes: 2, unsafe: true, drop_console: true },
+      mangle: true,
+    },
+    outDir: "./_static/captive_portal",
     assetsInlineLimit: 100000000,
-    polyfillModulePreload: false,
+    modulePreload: false,
   },
   server: {
-    open: "/", // auto open browser
+    open: "/",
   },
 });
