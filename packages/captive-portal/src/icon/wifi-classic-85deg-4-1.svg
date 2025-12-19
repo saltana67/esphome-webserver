@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="24" viewBox="0 0 32 24">
+  <!-- 
+    Classic WiFi icon with concentric 85° arcs
+    Center: (16, 20)
+    Line:Gap ratio = 4:1 (line=3, gap=1)
+    
+    Circle: r=3
+    Arc 1: r=5.5, stroke-width=3
+    Arc 2: r=9.5, stroke-width=3
+    Arc 3: r=13.5, stroke-width=3
+  -->
+  
+  <!-- Central circle -->
+  <circle cx="16" cy="20" r="3" fill="currentColor"/>
+  
+  <!-- First arc (inner) - 85° arc -->
+  <path d="M 12.28 15.94 A 5.5 5.5 0 0 1 19.72 15.94" 
+        fill="none" 
+        stroke="currentColor" 
+        stroke-width="3"
+        stroke-linecap="round"/>
+  
+  <!-- Second arc (middle) - 85° arc -->
+  <path d="M 9.58 13.00 A 9.5 9.5 0 0 1 22.42 13.00" 
+        fill="none" 
+        stroke="currentColor" 
+        stroke-width="3"
+        stroke-linecap="round"/>
+  
+  <!-- Third arc (outer) - 85° arc -->
+  <path d="M 6.88 10.05 A 13.5 13.5 0 0 1 25.12 10.05" 
+        fill="none" 
+        stroke="currentColor" 
+        stroke-width="3"
+        stroke-linecap="round"/>
+</svg>

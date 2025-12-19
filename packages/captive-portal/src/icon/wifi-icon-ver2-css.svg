@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="24" viewBox="0 0 32 24">
+  <style>
+    .outline {
+      fill: none;
+      stroke: currentColor;
+      stroke-linejoin: round;
+    }
+    .filled {
+      fill: currentColor;
+      transform: scale(0.7 0.7);
+      transform-origin: 16px 23px;
+    }
+  </style>
+  <defs>
+    <path id="w" d="M 16 23 L 1 6.91 A 22 22 0 0 1 31 6.91 Z"/>
+  </defs>
+  
+  <use href="#w" class="outline"/>
+  <use href="#w" class="filled"/>
+</svg>

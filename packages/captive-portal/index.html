@@ -1,36 +1,77 @@
 <!DOCTYPE html>
-<html lang=en>
-<head>
-<meta charset=UTF-8>
-<link rel=icon href=data:image>
-<meta name=viewport content="width=device-width,initial-scale=1,user-scalable=no">
-<link rel=stylesheet href=/src/stylesheet.css>
-</head>
-<body>
-<main>
-<h1 id=mac>MAC Address</h1>
-<h1 id=h1>WiFi Networks</h1>
-<aside>
-Connecting to network...<br>
-Please wait.
-</aside>
-<span id=net></span>
-<h3>WiFi Settings</h3>
-<form method=GET action=/wifisave>
-<input id=ssid name=ssid length=32 placeholder=SSID><br>
-<input id=psk name=psk length=64 type=password placeholder=Password><br>
-<br>
-<button>Save</button>
-</form>
-<br>
-<hr>
-<br>
-<h1>OTA Update</h1>
-<form method=POST action=/update enctype=multipart/form-data>
-<input type=file name=update>
-<button>Update</button>
-</form>
-</main>
-<script type=module src=/src/main.ts?module></script>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="data:image" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="/src/stylesheet.css" />
+  </head>
+
+  <body>
+    <main>
+      <h1 id="h1">WiFi Networks</h1>
+      <button id="refreshButton" type="button">
+        <span id="refreshButtonText">refresh</span>
+        <!--<img src="/src/icon/refresh.svg" style="vertical-align: middle;filter: invert(100%) sepia(7%) saturate(7473%) hue-rotate(237deg) brightness(116%) contrast(96%);"/>-->
+        <svg id="refreshButtonIcon" style="vertical-align: middle;filter: invert(100%) sepia(7%) saturate(7473%) hue-rotate(237deg) brightness(116%) contrast(96%);" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M9 12l-4.463 4.969-4.537-4.969h3c0-4.97 4.03-9 9-9 2.395 0 4.565.942 6.179 2.468l-2.004 2.231c-1.081-1.05-2.553-1.699-4.175-1.699-3.309 0-6 2.691-6 6h3zm10.463-4.969l-4.463 4.969h3c0 3.309-2.691 6-6 6-1.623 0-3.094-.65-4.175-1.699l-2.004 2.231c1.613 1.526 3.784 2.468 6.179 2.468 4.97 0 9-4.03 9-9h3l-4.537-4.969z"/></svg>
+      </button>
+      <aside>
+        The ESP will now try to connect to the network...<br>
+        Please give it some time to connect.<br>
+      </aside>
+      <span id="net">
+      </span>
+
+      <h3>WiFi Settings</h3>
+      <form method="GET" action="/wifisave">
+        <input id="ssid" name="ssid" maxlength="32" placeholder="SSID" /><br>
+        <input id="psk" name="psk" maxlength="64" type="password" placeholder="Password" />
+        <i class="eye" id="togglePassword"></i><br>
+        <br>
+        <button type="submit">Save</button>
+      </form>
+      <br>
+      <hr>
+      <br>
+
+      <h1>OTA Update</h1>
+      <form method="POST" action="/update" enctype="multipart/form-data">
+        <input type="file" name="update" />
+        <button type="submit">Update</button>
+      </form>
+    </main>
+
+    <script>
+      const togglePasswordI = document.querySelector("#togglePassword");
+      const passwordInput   = document.querySelector("#psk");
+
+      togglePasswordI.addEventListener("click", function () {
+            // toggle the type attribute
+            const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+            passwordInput.setAttribute("type", type);
+
+            // toggle the icon
+            this.classList.toggle("eye-visible");
+      });
+
+      // const refreshButton     = document.querySelector("#refreshButton");
+      // const refreshButtonText = document.querySelector("#refreshButtonText");
+      // const refreshButtonIcon = document.querySelector("#refreshButtonIcon");
+      // refreshButton.addEventListener("click", function () {
+      //       if( this.classList.contains("scanning") ) {
+      //           //stop scanning
+      //           this.classList.remove("scanning");
+      //           refreshButtonIcon.classList.remove("scanning");
+      //           refreshButtonText.innerHTML="refresh"
+      //       }else{
+      //           //start scanning
+      //           this.classList.add("scanning");
+      //           refreshButtonIcon.classList.add("scanning");
+      //           refreshButtonText.innerHTML="scanning"
+      //       }
+      // });
+
+    </script>
+    <script type="module" src="/src/main.ts?module"></script>
+  </body>
 </html>

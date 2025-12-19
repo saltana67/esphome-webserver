@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="24" viewBox="0 0 32 24">
+  <style>
+    :root {
+      --margin: 1;
+      --width: 30;  /* 32 - 2*margin */
+      --height: 22; /* 24 - 2*margin */
+      --center: 16; /* margin + width/2 */
+      --bottom: 23; /* margin + height */
+      --radius: 22; /* height */
+    }
+  </style>
+  <!-- 
+    Parameters:
+    margin = 1
+    internal width = 30 (32 - 2)
+    internal height = 22 (24 - 2)
+    center = 16
+    bottom = 23
+    radius = 22
+    y at edges = 6.91
+    arc span = 85.97°
+  -->
+  <path d="M 16 23 L 1 6.91 A 22 22 0 0 1 31 6.91 Z" 
+        fill="none" 
+        stroke="currentColor" 
+        stroke-linejoin="round"/>
+</svg>
