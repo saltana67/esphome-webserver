@@ -6,6 +6,10 @@ SRC_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 # Image from GitHub Container Registry
 IMAGE="ghcr.io/saltana67/esphome-webserver/captive-portal-dev:latest"
 
+# User mapping - files created will be owned by current user
+MY_USER_ID=$(id -u)
+MY_GROUP_ID=$(id -g)
+
 # Parse command line arguments
 MODE="build"
 PULL="auto"
@@ -84,12 +88,14 @@ case $MODE in
 esac
 
 echo "Image: $IMAGE"
+echo "User: $(id -un) ($MY_USER_ID:$MY_GROUP_ID)"
 echo "Mode: $MODE"
 echo ""
 
 docker run -it --rm \
     --name captive-portal-build \
     --network host \
+    --user ${MY_USER_ID}:${MY_GROUP_ID} \
     -v "${SRC_DIR}:/app" \
     -w /app/packages/captive-portal \
     "$IMAGE" \

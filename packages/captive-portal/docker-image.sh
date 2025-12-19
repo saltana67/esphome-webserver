@@ -86,6 +86,7 @@ echo ""
 docker run -it --rm \
     --name package-captive-portal \
     --network host \
+    --user ${MY_USER_ID}:${MY_GROUP_ID} \
     -v "${SRC_DIR}:/app" \
     -w /app/packages/captive-portal \
     ${IMAGE_NAME} \
