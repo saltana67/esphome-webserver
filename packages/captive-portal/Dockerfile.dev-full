@@ -1,0 +1,20 @@
+FROM node:22-slim
+
+# Install system dependencies
+RUN apt-get update \
+    && apt-get install -y xxd \
+    && rm -rf /var/lib/apt/lists/* \
+    && corepack enable \
+    && corepack prepare pnpm@latest --activate
+
+# Pre-install npm dependencies
+WORKDIR /deps
+
+COPY package.json pnpm-lock.yaml ./
+
+RUN pnpm install --frozen-lockfile
+
+# Set working directory for runtime
+WORKDIR /app/packages/captive-portal
+
+CMD ["bash"]

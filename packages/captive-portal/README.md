@@ -1,44 +1,77 @@
-# captive-portal
-Source code to build esphome captive portal. Output is `captive_index.h` file to be included by the Captive Portal Component https://esphome.io/components/captive_portal.html
+# Docker Build Scripts for Captive Portal
 
-## Important Note on Flash Usage
+Two approaches for building the captive portal:
 
-The captive portal HTML/CSS/JS is **always compiled into ESPHome binaries** when the `captive_portal:` component is enabled. This means the entire portal interface is stored in the device's flash memory. **Minimizing the flash footprint is critical** as ESP devices have limited flash space, and every byte saved here allows more room for user code and other components.
+## Option 1: docker-cmd.sh (Simple, no pre-built image)
 
-Current size: **1,471 bytes** (gzipped)
+Runs setup every time. Slower but simpler.
 
-###  Features
+```bash
+# Production build
+./docker-cmd.sh
 
-- All assets (css, svg and js) are inlined and served from index.html
-- index.html is gzipped, and stored in flash compressed (~1.4KB of flash memory)
-- ssid scan result is returned via `/config.json` api request
-- Aggressively optimized for minimal size while maintaining functionality
+# Dev server with hot reload
+./docker-cmd.sh --dev
 
+# Interactive shell
+./docker-cmd.sh --shell
+```
 
-development
-===========
+## Option 2: docker-image.sh (Pre-built image, faster)
+
+Builds a Docker image once with all tools. Faster for repeated builds.
+
+```bash
+# First time: build the image
+./docker-image.sh --build-image
+
+# Production build (fast)
+./docker-image.sh
+
+# Dev server
+./docker-image.sh --dev
+
+# Interactive shell
+./docker-image.sh --shell
+```
+
+## File placement
+
+Place these files in `packages/captive-portal/`:
 
 ```
-git clone https://github.com/esphome/esphome-webserver.git
-cd captive-portal
+esphome-webserver/
+├── packages/
+│   └── captive-portal/
+│       ├── docker-cmd.sh        # Option 1
+│       ├── Dockerfile.dev       # Option 2
+│       ├── docker-image.sh      # Option 2
+│       ├── vite.config.ts
+│       ├── package.json
+│       └── ...
+```
+
+## Troubleshooting
+
+**Registry timeouts:**
+Both scripts set `fetch-timeout 120000` (2 min). If still timing out:
+```bash
+# In shell mode
+pnpm config set fetch-timeout 300000  # 5 min
 pnpm install
 ```
 
-`npm run start`
-Starts a dev server on http://localhost:3000
+**Permission issues:**
+Scripts map your local user into the container. If issues persist:
+```bash
+# Check ownership
+ls -la _static/
 
-build
-=====
-`npm run build`
-The build files are copied to `dist` folder. `captive_index.h` is built to be deployed to https://github.com/esphome/esphome/tree/dev/esphome/components/captive_portal
+# Fix if needed
+sudo chown -R $(id -u):$(id -g) _static/
+```
 
-
-serve
-=====
-`npm run server`
-Starts a production test server on http://localhost:5001
-
-
-[URL-encoder for SVG](https://yoksel.github.io/url-encoder/)
-https://vitejs.dev/ https://rollupjs.org/
-[free icons](https://iconmonstr.com/)
+**Rebuild image after changes:**
+```bash
+./docker-image.sh --build-image
+```
